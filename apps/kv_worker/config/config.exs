@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :kv_server, key: :value
+#     config :kv_worker, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:kv_server, :key)
+#     Application.get_env(:kv_worker, :key)
 #
 # You can also configure a 3rd-party app:
 #
@@ -29,12 +29,5 @@ use Mix.Config
 #
 #     import_config "#{Mix.env}.exs"
 
-config :kv_server,
-	datanodes: [
-		:"datanode1@127.0.0.1",
-		:"datanode2@127.0.0.1",
-		:"datanode3@127.0.0.1"
-	],	
-	remote_worker_name: :data_worker,
-	max_key_size: 16,
-	max_value_size: 256
+config :kv_worker,
+	max_entry_count: 10
