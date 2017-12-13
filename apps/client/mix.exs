@@ -10,6 +10,7 @@ defmodule Client.Mixfile do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.5",
+      build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       deps: deps()
     ]
@@ -18,7 +19,7 @@ defmodule Client.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :maru, :kv_server]
     ]
   end
 
@@ -28,6 +29,9 @@ defmodule Client.Mixfile do
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       # {:sibling_app_in_umbrella, in_umbrella: true},
+      {:maru, "~> 0.12"},
+      {:kv_server, in_umbrella: true},
+      {:kv_worker, in_umbrella: true}
     ]
   end
 end

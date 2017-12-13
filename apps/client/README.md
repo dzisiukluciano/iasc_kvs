@@ -19,3 +19,12 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/client](https://hexdocs.pm/client).
 
+usage: 
+
+curl -X POST http://localhost:8888/entries --data "key=k1&value=v1" | python -mjson.tool
+curl -X POST "http://localhost:8888/entries?key=k1&value=v1" | python -mjson.tool
+curl -X GET http://localhost:8888/entries/k1
+curl -X DELETE http://localhost:8888/entries/k1
+curl -X GET http://localhost:8888/entries?values_gt=v2
+
+
