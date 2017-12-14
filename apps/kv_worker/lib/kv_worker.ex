@@ -36,7 +36,7 @@ defmodule KVWorker do
   end
 
   def handle_call({:put, key, value}, _, {entries, max_entry_count} = state) do
-
+    Logger.info(~s(put recibido, key=#{key} value=#{value}))
     unless full?({entries, max_entry_count}) do
       :ets.insert(entries , {key, value})
       {:reply, {:ok, %{key: key, value: value, node: node()}}, state}
@@ -47,17 +47,17 @@ defmodule KVWorker do
   end
 
   def handle_call({:get, key}, _, {entries, _max_entry_count} = state) do
-
+    Logger.info(~s(get recibido, key=#{key}))
     case lookup(entries, key) do
       {:ok, value} ->
         {:reply, {:ok, %{key: key, value: value, node: node()}}, state}
       :error ->
         {:reply, {:error, {:key_not_found, %{key: key}}}, state}
     end
-
   end
 
   def handle_call({:delete, key}, _,  {entries, _max_entry_count} = state) do
+    Logger.info(~s(delete recibido, key=#{key}))
     case lookup(entries, key) do
       {:ok, _} ->
         :ets.delete(entries, key)
@@ -76,30 +76,21 @@ defmodule KVWorker do
   end
 
   def handle_call({:size}, _, {entries, _max_entry_count} = state) do
+    Logger.info(~s(size recibido))
     {:reply, {:ok, %{node: node(), entries: entry_count(entries)}}, state}
   end
 
   def handle_call({:values_gt, value}, _, {entries, _max_entry_count} = state) do
-
+    Logger.info(~s(values_gt recibido))
     values = :ets.select(entries,
       :ets.fun2ms(fn({k,v}) when v > value -> v end))
 
     {:reply, {:ok, values}, state}
-
-  end
-
-  def handle_call({:values_gte, value}, _, {entries, _max_entry_count} = state) do
-
-    values = :ets.select(entries,
-      :ets.fun2ms(fn({k,v}) when v >= value -> v end))
-
-    {:reply, {:ok, values}, state}
-
   end
 
 
   def handle_call({:values_lt, value}, _, {entries, _max_entry_count} = state) do
-
+    Logger.info(~s(values_lt recibido))
     values = :ets.select(entries,
       :ets.fun2ms(fn({k,v}) when v < value -> v end))
 
@@ -107,17 +98,8 @@ defmodule KVWorker do
 
   end
 
-  def handle_call({:values_lte, value}, _, {entries, _max_entry_count} = state) do
-
-    values = :ets.select(entries,
-      :ets.fun2ms(fn({k,v}) when v <= value -> v end))
-
-    {:reply, {:ok, values}, state}
-
-  end
-
   def handle_info(msg, {_entries, _max_entry_count} = state) do
-    Logger.info(~s(Message #{inspect msg} not understood :())
+    Logger.info(~s(Bad Request #{inspect msg}))
     {:noreply, {_entries, _max_entry_count} = state}
   end
 
