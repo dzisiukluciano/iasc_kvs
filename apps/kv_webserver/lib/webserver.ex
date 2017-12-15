@@ -89,6 +89,10 @@ defmodule Rest do
     JSend.error(%{type: type, data: data})
   end 
 
+  defp response({:partial_content, data}) do 
+    JSend.partial(data)
+  end 
+
 end
 
 
@@ -99,7 +103,11 @@ defmodule JSend do
   def success(data) do 
     %__MODULE__{status: "success", data: data}
   end
-  
+
+  def partial(data) do 
+    %__MODULE__{status: "partial_content", data: data}
+  end
+
   def fail(data) do 
     %__MODULE__{status: "fail", data: data}
   end 

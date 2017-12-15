@@ -96,7 +96,11 @@ defmodule KVServer do
     {:ok, collect([r|replies])}
   end
 
-  defp build_response({_, [f|fnodes]}) do
+  defp build_response({[r|replies], [f|fnodes]}) do
+    {:partial_content, collect([r|replies])}
+  end
+
+  defp build_response({[], [f|fnodes]}) do
     {:error, {:failed_nodes, [f|fnodes]}}
   end
 
